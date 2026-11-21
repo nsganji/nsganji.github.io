@@ -8,7 +8,10 @@
     <div class="pf-v6-c-masthead__brand">
       <a class="pf-v6-c-masthead__logo site-brand" href="{{ site.Home.RelPermalink }}" aria-label="{{ $name }}, home">
         <span class="site-brand__mark" aria-hidden="true">{{ $p.initials | default "__INITIALS__" }}</span>
-        <span class="site-brand__name">{{ $name }}</span>
+        <span class="site-brand__name">
+          <span class="site-brand__name-full">{{ $name }}</span>
+          <span class="site-brand__name-short">{{ $p.shortName | default $name }}</span>
+        </span>
       </a>
     </div>
   </div>

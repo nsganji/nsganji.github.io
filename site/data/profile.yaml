@@ -1,8 +1,9 @@
 name: "Naga Sai Nagendra Ganji"
-initials: "NSG"
+shortName: "Naga Sai Ganji"
+initials: "NG"
 title: "Senior SDET"
-tagline: "Scalable automation for connected, mobile, and hardware-integrated products."
-intro: "I build maintainable automation and CI/CD feedback using Python, Robot Framework, Appium, and AI-assisted workflows."
+tagline: "Building reliable automation for connected products."
+intro: "I design maintainable E2E frameworks across mobile, API, web, and hardware-integrated systems, with CI/CD feedback and AI-assisted workflows."
 availability: "Open to opportunities"
 location: ""
 email: "nsnganji@tuta.com"
@@ -14,11 +15,10 @@ stats:
   - label: "Years across software and quality engineering"
     value: "6+"
     numeric: true
-  - label: "Faster reusable automation development"
-    value: "50%"
-    numeric: true
-  - label: "Automation scope"
-    value: "API · Mobile · System"
+  - label: "Mobile platforms"
+    value: "Android · iOS"
+  - label: "API testing"
+    value: "REST · Functional · Integration"
 social:
   - name: "GitHub"
     url: "https://github.com/nsganji"
