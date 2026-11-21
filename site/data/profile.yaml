@@ -1,0 +1,28 @@
+name: "Naga Sai Nagendra Ganji"
+initials: "NSG"
+title: "Senior SDET"
+tagline: "Software quality engineering grounded in software engineering."
+intro: "My career spans software engineering and software quality roles at Carrier, Red Hat, and Innominds."
+availability: "Open to opportunities"
+location: ""
+email: "nsnganji@tuta.com"
+resumeUrl: ""
+bio:
+  - "I bring more than six years of experience across software engineering and software quality roles."
+  - "I build Python-based automation for API, web, mobile, and embedded products, and integrate test suites into CI/CD workflows."
+stats:
+  - label: "Years across software and quality engineering"
+    value: "6+"
+    numeric: true
+  - label: "Faster reusable automation development"
+    value: "50%"
+    numeric: true
+  - label: "Automation across release workflows"
+    value: "API · UI · Mobile"
+social:
+  - name: "GitHub"
+    url: "https://github.com/nsganji"
+    icon: "github"
+  - name: "LinkedIn"
+    url: "https://www.linkedin.com/in/nsnganji/"
+    icon: "linkedin"
