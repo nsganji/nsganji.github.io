@@ -1,0 +1,127 @@
+# Build the Hugo site in site/ and deploy it to GitHub Pages.
+# One-time setup: Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+# Adapted from Hugo's official Pages workflow (skills/sdet-portfolio-site/references/deployment.md).
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/**"
+      - ".github/workflows/deploy.yml"
+  pull_request:            # build-only check, never deploys
+    paths:
+      - "site/**"
+      - "scripts/**"
+  workflow_dispatch:
+
+# configure-pages (build job) reads the Pages site config; the deploy job sets its own minimal permissions.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One Pages deployment at a time; a running deploy is never cancelled mid-way.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: 0.167.0
+  NODE_VERSION: 24
+
+defaults:
+  run:
+    shell: bash
+    working-directory: site   # every run: step executes in site/ unless overridden
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0          # full history for .Lastmod / .GitInfo
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install Hugo
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl -sfL -O "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+          mkdir -p "${HOME}/.local/hugo"
+          tar -C "${HOME}/.local/hugo" -xf "hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+          echo "${HOME}/.local/hugo" >> "${GITHUB_PATH}"
+
+      - name: Install PatternFly + Inter (npm ci)
+        run: npm ci
+
+      - name: Build
+        env:
+          HUGO_ENVIRONMENT: production
+        run: |
+          hugo version
+          hugo build --gc --minify \
+            --baseURL "${{ steps.pages.outputs.base_url }}/" \
+            --cacheDir "${{ runner.temp }}/hugo_cache"
+
+      - name: Verify CSS/JS/font pipeline
+        run: bash ../scripts/verify-pipeline.sh
+
+      # Warns (never fails) while __UPPER_SNAKE__ placeholders remain in the built HTML.
+      # Set the repo variable ENFORCE_NO_PLACEHOLDERS=true once real content is in to turn it into a hard gate.
+      - name: Check for leftover placeholders
+        env:
+          ENFORCE: ${{ vars.ENFORCE_NO_PLACEHOLDERS }}
+        run: |
+          files="$(grep -rEl '__[A-Z0-9_]+__' public --include='*.html' || true)"
+          if [ -z "$files" ]; then
+            echo "No placeholder tokens found."
+            exit 0
+          fi
+          tokens="$(grep -rEoh '__[A-Z0-9_]+__' public --include='*.html' | sort | uniq -c | sort -rn)"
+          {
+            echo "### Placeholder tokens still in built HTML"
+            echo '```'
+            echo "$tokens"
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
+          while IFS= read -r f; do
+            echo "::warning file=site/${f}::Placeholder tokens remain in ${f}"
+          done <<< "$files"
+          if [ "$ENFORCE" = "true" ] && [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "::error::ENFORCE_NO_PLACEHOLDERS=true and placeholder tokens were found"
+            exit 1
+          fi
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site/public
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
