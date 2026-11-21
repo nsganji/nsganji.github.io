@@ -1,0 +1,11 @@
+site/node_modules/
+site/public/
+site/resources/
+site/.hugo_build.lock
+site/hugo_stats.json
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+/package-lock.json

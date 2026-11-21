@@ -1,0 +1,84 @@
+# Hugo configuration for the SDET portfolio (Hugo >= 0.153, tested 0.167.0).
+# Every __UPPER_SNAKE__ token is a placeholder; list leftovers with scripts/check-placeholders.sh.
+# CI overrides baseURL with the value from actions/configure-pages.
+baseURL = "https://nsganji.github.io/"
+locale = "en-US"
+title = "Naga Sai Nagendra Ganji | Senior SDET"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+[build.buildStats]
+  enable = true            # writes hugo_stats.json (used for optional CSS purging)
+
+[markup.goldmark.renderer]
+  unsafe = false           # keep raw HTML out of Markdown content
+
+[markup.highlight]
+  noClasses = false        # emit Chroma classes; colours come from theme.css (--ds-code-*)
+
+[outputs]
+  home = ["html"]
+  section = ["html"]
+  page = ["html"]
+
+[sitemap]
+  changeFreq = "monthly"
+
+[params]
+  description = "Portfolio of Naga Sai Nagendra Ganji, Senior SDET."
+  author = "Naga Sai Nagendra Ganji"
+  email = "nsnganji@tuta.com"
+  ogImage = "images/og-default.png"   # 1200x630, relative to static/
+  # Single-page navigation: each id must match a <section id> on the home page.
+  [[params.nav]]
+    name = "Expertise"
+    id = "skills"
+  [[params.nav]]
+    name = "Experience"
+    id = "about"
+  [[params.nav]]
+    name = "Testimonials"
+    id = "testimonials"
+  [[params.nav]]
+    name = "Contact"
+    id = "contact"
+
+  # PatternFly CSS bundling (layouts/_partials/head/css.html).
+  # mode = "selective" (default, ~77 KB gzip) or "full" (patternfly.min.css, 1.8 MB raw).
+  # A component that renders unstyled is missing here: add "Folder/file" from
+  # node_modules/@patternfly/patternfly/components/<Folder>/<file>.css
+  [params.patternfly]
+    mode = "selective"
+    layouts = ["Grid/grid"]
+    components = [
+      "SkipToContent/skip-to-content", "Masthead/masthead", "Nav/nav", "Button/button",
+      "Title/title", "Content/content", "Card/card", "Label/label",
+      "List/list", "Hero/hero",
+      "BackToTop/back-to-top",
+      "CodeBlock/code-block"
+    ]
+    utilities = ["Spacing/spacing", "Text/text", "Display/display", "Alignment/alignment", "Accessibility/accessibility"]
+
+# Explicit mounts replace Hugo's defaults for that component, so re-declare assets/static.
+[module]
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "node_modules/@patternfly/patternfly"
+    target = "assets/patternfly"
+    files = ["patternfly-base.css", "patternfly.min.css", "patternfly-addons.css", "components/**.css", "layouts/**.css", "utilities/**.css"]
+  [[module.mounts]]
+    # PatternFly CSS references ./assets/... relative to itself; the bundle is published
+    # to /css/, so fonts/icons/backgrounds must live under /css/assets/.
+    source = "node_modules/@patternfly/patternfly/assets"
+    target = "static/css/assets"
+    files = ["fonts/Red*/*VF*.woff2", "fonts/webfonts/fa-solid-900.woff2", "pficon/*.woff2", "images/*-Bkg-Generic-*.svg"]
+  [[module.mounts]]
+    # Inter Variable (design system body/heading font), referenced by theme.css as ./assets/fonts/Inter/...
+    source = "node_modules/@fontsource-variable/inter/files"
+    target = "static/css/assets/fonts/Inter"
+    files = ["inter-latin-wght-*.woff2", "inter-latin-ext-wght-*.woff2"]
