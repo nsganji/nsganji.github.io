@@ -2,7 +2,7 @@ roles:
   - title: "Senior Software Engineer"
     company: "Carrier"
     period: "Mar 2025 - Present"
-    summary: "Building mobile automation and release confidence for an installer-facing app that guides complete energy-system commissioning, maintenance, and servicing."
+    summary: "Building mobile automation for commissioning, maintenance, and service workflows."
     points:
       - "Established end-to-end mobile automation for a major application release across heat-pump and climate-control workflows."
       - "Built reusable regression coverage for commissioning, configuration, and service journeys."
