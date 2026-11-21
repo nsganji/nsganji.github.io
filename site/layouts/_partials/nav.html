@@ -3,7 +3,7 @@
 {{- $p := hugo.Data.profile | default dict -}}
 {{- $name := $p.name | default site.Params.author | default "__FULL_NAME__" -}}
 {{- $prefix := cond .IsHome "" site.Home.RelPermalink -}}
-<header class="pf-v6-c-masthead pf-m-display-inline site-masthead" id="top">
+<header class="pf-v6-c-masthead pf-m-display-inline site-masthead">
   <div class="pf-v6-c-masthead__main">
     <div class="pf-v6-c-masthead__brand">
       <a class="pf-v6-c-masthead__logo site-brand" href="{{ site.Home.RelPermalink }}" aria-label="{{ $name }}, home">

@@ -1,11 +1,12 @@
 {{- $p := hugo.Data.profile | default dict -}}
 {{- $name := $p.name | default site.Params.author | default "__FULL_NAME__" -}}
+{{- $shortName := $p.shortName | default $name -}}
 <section class="site-hero" aria-labelledby="hero-title">
   <div class="site-container">
     <div class="pf-v6-c-hero">
       <div class="pf-v6-c-hero__body">
         <p class="site-eyebrow">{{ $p.title | default "Senior SDET" }}{{ with $p.location }} · {{ . }}{{ end }}</p>
-        <h1 class="pf-v6-c-title pf-m-4xl" id="hero-title">Hi, I'm <span class="site-hero__highlight">{{ $name }}</span></h1>
+        <h1 class="pf-v6-c-title pf-m-4xl" id="hero-title">Hi, I'm <span class="site-hero__highlight"><span class="site-hero__name-full">{{ $name }}</span><span class="site-hero__name-short">{{ $shortName }}</span></span></h1>
         <p class="site-hero__tagline">{{ $p.tagline | default "__TAGLINE__" }}</p>
         <p class="site-lead">{{ $p.intro | default "__HERO_INTRO__" }}</p>
         <div class="site-actions">

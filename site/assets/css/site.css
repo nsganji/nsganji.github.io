@@ -65,12 +65,17 @@ body::before { content: ""; display: block; height: 3px; background: var(--ds-co
 }
 .site-hero .pf-v6-c-hero__body { max-width: 52rem; }
 .site-hero h1 { line-height: var(--ds-line-height-display); }
+.site-hero__name-short { display: none; }
 .site-hero__tagline { margin-block-start: var(--ds-space-md); font-size: var(--ds-font-size-xl); font-weight: var(--ds-font-weight-semibold); color: var(--ds-color-text); max-width: var(--ds-measure); }
 .site-hero__focus { border-inline-start: 4px solid var(--ds-color-accent-bar); padding-inline-start: var(--ds-space-xl); }
 .site-hero__focus .site-eyebrow { margin-block-end: var(--ds-space-sm); }
 .site-hero__focus-list { list-style: none; padding: 0; margin: 0; }
 .site-hero__focus-list li { padding-block: var(--ds-space-sm); border-block-end: var(--ds-border-width) solid var(--ds-color-border); font-size: var(--ds-font-size-lg); font-weight: var(--ds-font-weight-medium); }
 .site-hero__focus-list li:last-child { border-block-end: 0; }
+@media (max-width: 575px) {
+  .site-hero__name-full { display: none; }
+  .site-hero__name-short { display: inline; }
+}
 @media (max-width: 767px) {
   .site-hero .pf-v6-c-hero { grid-template-columns: minmax(0, 1fr); gap: var(--ds-space-xl); }
   .site-hero .pf-v6-c-hero__body { max-width: 100%; }
@@ -101,7 +106,9 @@ body::before { content: ""; display: block; height: 3px; background: var(--ds-co
 .site-timeline { list-style: none; padding: 0; margin: 0; border-inline-start: 2px solid var(--ds-color-border); }
 .site-timeline__item { position: relative; display: grid; grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr); column-gap: var(--ds-space-2xl); padding-inline-start: var(--ds-space-lg); padding-block-end: var(--ds-space-xl); }
 .site-timeline__item::before { content: ""; position: absolute; inset-inline-start: -7px; inset-block-start: 0.4em; inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--ds-color-surface); border: 2px solid var(--ds-color-primary); }
-.site-timeline__company { margin-block-start: 2px; font-weight: var(--ds-font-weight-semibold); }
+.site-timeline__role-title { color: var(--ds-color-text); }
+.site-timeline__company { margin-block-start: var(--ds-space-xs); color: var(--ds-color-primary); font-size: var(--ds-font-size-sm); font-weight: var(--ds-font-weight-bold); text-transform: uppercase; letter-spacing: var(--ds-letter-spacing-eyebrow); }
+.site-timeline__period { margin-block-start: 2px; }
 .site-timeline__summary { margin-block-end: var(--ds-space-sm); color: var(--ds-color-text); font-weight: var(--ds-font-weight-medium); max-width: 72ch; }
 .site-timeline__evidence { min-width: 0; }
 .site-timeline__evidence .pf-v6-c-list { max-width: 72ch; }

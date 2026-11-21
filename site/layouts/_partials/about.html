@@ -36,9 +36,9 @@
         {{- range $roles }}
         <li class="site-timeline__item site-reveal">
           <div class="site-timeline__role">
-            <h4 class="pf-v6-c-title pf-m-md">{{ .title }}</h4>
+            <h4 class="pf-v6-c-title pf-m-md site-timeline__role-title">{{ .title }}</h4>
             <p class="site-timeline__company">{{ .company }}</p>
-            <p class="site-meta">{{ .period }}</p>
+            <p class="site-meta site-timeline__period">{{ .period }}</p>
           </div>
           <div class="site-timeline__evidence">
             {{- with .summary }}<p class="site-timeline__summary">{{ . }}</p>{{ end }}
