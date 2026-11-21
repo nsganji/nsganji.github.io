@@ -1,0 +1,29 @@
+{{- $p := hugo.Data.profile | default dict -}}
+{{- $name := $p.name | default site.Params.author | default "__FULL_NAME__" -}}
+<section class="site-hero" aria-labelledby="hero-title">
+  <div class="site-container">
+    <div class="pf-v6-c-hero">
+      <div class="pf-v6-c-hero__body">
+        <p class="site-eyebrow">{{ $p.title | default "Senior SDET" }}{{ with $p.location }} · {{ . }}{{ end }}</p>
+        <h1 class="pf-v6-c-title pf-m-4xl" id="hero-title">Hi, I'm <span class="site-hero__highlight">{{ $name }}</span></h1>
+        <p class="site-hero__tagline">{{ $p.tagline | default "__TAGLINE__" }}</p>
+        <p class="site-lead">{{ $p.intro | default "__HERO_INTRO__" }}</p>
+        <div class="site-actions">
+          <a class="pf-v6-c-button pf-m-primary pf-m-display-lg" href="#about"><span class="pf-v6-c-button__text">View experience</span></a>
+          <a class="pf-v6-c-button pf-m-secondary pf-m-display-lg" href="#contact"><span class="pf-v6-c-button__text">Contact me</span></a>
+        </div>
+        {{- with $p.availability | default "__AVAILABILITY_STATUS__" }}
+        <p class="site-availability"><span class="pf-v6-c-label pf-m-green"><span class="pf-v6-c-label__content"><span class="pf-v6-c-label__text">{{ . }}</span></span></span></p>
+        {{- end }}
+      </div>
+      <aside class="site-hero__focus" aria-label="Quality engineering areas">
+        <p class="site-eyebrow">Quality across the lifecycle</p>
+        <ul class="site-hero__focus-list" role="list">
+          <li>Test automation</li>
+          <li>API and mobile testing</li>
+          <li>CI/CD integration</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,15 @@
+{{ define "main" }}
+<section class="site-section" aria-labelledby="nf-title">
+  <div class="site-container site-container--narrow">
+    <header class="site-section__header">
+      <p class="site-eyebrow">Error 404</p>
+      <h1 class="pf-v6-c-title pf-m-3xl" id="nf-title">Test case not found</h1>
+      <p class="site-lead">Expected: a working link. Actual: this page. The page you requested doesn't exist or has moved.</p>
+    </header>
+    <div class="site-actions">
+      <a class="pf-v6-c-button pf-m-primary" href="{{ site.Home.RelPermalink }}"><span class="pf-v6-c-button__text">Back to home</span></a>
+      <a class="pf-v6-c-button pf-m-secondary" href="{{ "projects/" | relURL }}"><span class="pf-v6-c-button__text">Browse projects</span></a>
+    </div>
+  </div>
+</section>
+{{ end }}

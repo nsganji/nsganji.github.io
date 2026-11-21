@@ -1,0 +1,25 @@
+{{- /* CSS pipeline (infrastructure, not a page partial). Builds one fingerprinted bundle at /css/bundle.<hash>.css.
+  Order matters: PatternFly base -> layouts -> components -> utilities -> css/theme.css (design tokens + skins) -> css/site.css (structure).
+  Tool-agnostic equivalent: link the same files in the same order. */ -}}
+{{- $pf := site.Params.patternfly -}}
+{{- $files := slice -}}
+{{- if eq $pf.mode "full" -}}
+  {{- $files = slice "patternfly/patternfly.min.css" "patternfly/patternfly-addons.css" -}}
+{{- else -}}
+  {{- $files = slice "patternfly/patternfly-base.css" -}}
+  {{- range $pf.layouts }}{{ $files = $files | append (printf "patternfly/layouts/%s.css" .) }}{{ end -}}
+  {{- range $pf.components }}{{ $files = $files | append (printf "patternfly/components/%s.css" .) }}{{ end -}}
+  {{- range $pf.utilities }}{{ $files = $files | append (printf "patternfly/utilities/%s.css" .) }}{{ end -}}
+{{- end -}}
+{{- $files = $files | append "css/theme.css" "css/site.css" -}}
+{{- $res := slice -}}
+{{- range $files -}}
+  {{- with resources.Get . -}}
+    {{- $res = $res | append . -}}
+  {{- else -}}
+    {{- if ne . "css/theme.css" }}{{ errorf "CSS asset not found: %s (run npm ci? check params.patternfly paths)" . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $css := $res | resources.Concat "css/bundle.css" | minify | fingerprint -}}
+<link rel="preload" href="{{ "css/assets/fonts/Inter/inter-latin-wght-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

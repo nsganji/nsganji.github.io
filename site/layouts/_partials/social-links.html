@@ -1,0 +1,16 @@
+{{- /* Social links list shared by contact and footer. Args: class, label, showText (bool: visible text vs icon-only).
+  Reads data/profile.yaml `social` (list of {name, url, icon}); placeholder URLs render until it exists. */ -}}
+{{- $p := hugo.Data.profile | default dict -}}
+{{- $social := $p.social | default (slice
+  (dict "name" "GitHub" "url" "https://github.com/nsganji" "icon" "github")
+  (dict "name" "LinkedIn" "url" "https://www.linkedin.com/in/nsnganji/" "icon" "linkedin")) -}}
+<ul class="{{ .class }}" role="list" aria-label="{{ .label }}">
+  {{- range $social }}
+  <li>
+    <a class="pf-v6-c-button {{ if $.showText }}pf-m-link{{ else }}pf-m-plain{{ end }}" href="{{ .url }}"{{ if not $.showText }} aria-label="{{ .name }}"{{ end }}{{ if hasPrefix .url "http" }} rel="me noopener"{{ end }}>
+      <span class="pf-v6-c-button__icon{{ if $.showText }} pf-m-start{{ end }}">{{ partial "icon.html" .icon }}</span>
+      {{- if $.showText }}<span class="pf-v6-c-button__text">{{ .name }}</span>{{ end }}
+    </a>
+  </li>
+  {{- end }}
+</ul>

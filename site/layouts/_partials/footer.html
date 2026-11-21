@@ -1,0 +1,15 @@
+{{- $p := hugo.Data.profile | default dict -}}
+{{- $name := $p.name | default site.Params.author | default "__FULL_NAME__" -}}
+<footer class="site-footer">
+  <div class="site-container site-footer__inner">
+    <p class="site-footer__brand"><strong>{{ $name }}</strong> · {{ $p.title | default "Senior SDET" }}</p>
+    {{ partial "social-links.html" (dict "class" "site-footer__social" "label" "Social profiles" "showText" false) }}
+    <p class="site-meta">© {{ now.Year }} {{ $name }}. Built with <a href="https://gohugo.io/" rel="noopener">Hugo</a> &amp; <a href="https://www.patternfly.org/" rel="noopener">PatternFly</a>.</p>
+  </div>
+</footer>
+<div class="pf-v6-c-back-to-top pf-m-hidden site-back-to-top">
+  <a class="pf-v6-c-button pf-m-primary" href="#top">
+    <span class="pf-v6-c-button__text">Back to top</span>
+    <span class="pf-v6-c-button__icon pf-m-end">{{ partial "icon.html" "arrow-up" }}</span>
+  </a>
+</div>

@@ -1,0 +1,25 @@
+{{- with hugo.Data.testimonials }}
+<section class="site-section site-section--alt" id="testimonials" aria-labelledby="testimonials-title">
+  <div class="site-container">
+    <header class="site-section__header site-section__header--center">
+      <p class="site-eyebrow">Peer recommendations</p>
+      <h2 class="pf-v6-c-title pf-m-3xl" id="testimonials-title">Colleague recommendations</h2>
+    </header>
+    <div class="pf-v6-l-grid pf-m-gutter pf-m-all-12-col pf-m-all-6-col-on-md">
+      {{- range . }}
+      {{- $initials := "" }}
+      {{- range first 2 (split (trim .name "_ ") " ") }}{{ $initials = printf "%s%s" $initials (substr . 0 1 | upper) }}{{ end }}
+      <div class="pf-v6-l-grid__item">
+        <figure class="pf-v6-c-card pf-m-full-height site-quote site-reveal">
+          <div class="pf-v6-c-card__body"><blockquote cite="{{ .sourceUrl }}"><p>{{ printf "\"%s\"" .quote }}</p></blockquote></div>
+          <figcaption class="pf-v6-c-card__footer site-quote__person">
+            <span class="site-quote__avatar" aria-hidden="true">{{ $initials }}</span>
+            <span><strong>{{ .name }}</strong><br><span class="site-stat__label">{{ .role }}{{ with .relationship }} · {{ . }}{{ end }}<br>{{ .date }} · <a href="{{ .sourceUrl }}" rel="noopener">LinkedIn</a></span></span>
+          </figcaption>
+        </figure>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}

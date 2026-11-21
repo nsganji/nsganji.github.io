@@ -1,0 +1,32 @@
+{{- /* Sticky masthead: brand left, section links right, hamburger below lg (main.js toggles #site-nav.is-open).
+  Home links are bare #ids so main.js scroll-spy can track them; other pages link back to /#id. */ -}}
+{{- $p := hugo.Data.profile | default dict -}}
+{{- $name := $p.name | default site.Params.author | default "__FULL_NAME__" -}}
+{{- $prefix := cond .IsHome "" site.Home.RelPermalink -}}
+<header class="pf-v6-c-masthead pf-m-display-inline site-masthead" id="top">
+  <div class="pf-v6-c-masthead__main">
+    <div class="pf-v6-c-masthead__brand">
+      <a class="pf-v6-c-masthead__logo site-brand" href="{{ site.Home.RelPermalink }}" aria-label="{{ $name }}, home">
+        <span class="site-brand__mark" aria-hidden="true">{{ $p.initials | default "__INITIALS__" }}</span>
+        <span class="site-brand__name">{{ $name }}</span>
+      </a>
+    </div>
+  </div>
+  <div class="pf-v6-c-masthead__content site-masthead__content">
+    <button class="pf-v6-c-button pf-m-plain site-nav-toggle" type="button"
+            aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation">
+      <span class="pf-v6-c-button__icon">{{ partial "icon.html" "menu" }}</span>
+    </button>
+    <nav class="pf-v6-c-nav pf-m-horizontal site-nav" id="site-nav" aria-label="Primary">
+      <ul class="pf-v6-c-nav__list" role="list">
+        {{- range site.Params.nav }}
+        <li class="pf-v6-c-nav__item">
+          <a class="pf-v6-c-nav__link" href="{{ $prefix }}#{{ .id }}" data-section="{{ .id }}">
+            <span class="pf-v6-c-nav__link-text">{{ .name }}</span>
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </nav>
+  </div>
+</header>

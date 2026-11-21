@@ -1,0 +1,5 @@
+{{- /* JS pipeline (infrastructure, not a page partial). main.js (nav, scroll-spy, filter, back-to-top)
+  + theme.js (reveal, count-up, code copy) -> one fingerprinted deferred bundle. Call at the end of <body>.
+  Replaces the inline $js line shown in sdet-portfolio-site page-templates.md -> baseof.html. */ -}}
+{{- $js := slice (resources.Get "js/main.js") (resources.Get "js/theme.js") | resources.Concat "js/bundle.js" | minify | fingerprint -}}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

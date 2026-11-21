@@ -1,0 +1,17 @@
+{{- /* Wraps every fenced code block in a PatternFly code block with a language label and copy button (theme.js). */ -}}
+{{- $lang := .Type | default "text" -}}
+<div class="pf-v6-c-code-block site-code">
+  <div class="pf-v6-c-code-block__header">
+    <span class="site-code__lang">{{ $lang }}</span>
+    <div class="pf-v6-c-code-block__actions">
+      <div class="pf-v6-c-code-block__actions-item">
+        <button class="pf-v6-c-button pf-m-plain site-code__copy" type="button" aria-label="Copy code">
+          <span class="pf-v6-c-button__icon">{{ partial "icon.html" "copy" }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="pf-v6-c-code-block__content">
+    {{- transform.Highlight .Inner $lang .Options -}}
+  </div>
+</div>

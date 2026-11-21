@@ -1,0 +1,74 @@
+{{- /* About & experience: vertical intro, career timeline, education, and awards.
+  Reads data/profile.yaml (bio, stats, resumeUrl) and data/experience.yaml (roles, education, awards). */ -}}
+{{- $p := hugo.Data.profile | default dict -}}
+{{- $x := hugo.Data.experience | default dict -}}
+{{- $bio := $p.bio | default (slice "__BIO_PARAGRAPH_1__" "__BIO_PARAGRAPH_2__") -}}
+{{- $stats := $p.stats | default (slice
+  (dict "label" "Years in quality engineering" "value" "__YEARS_EXPERIENCE__")
+  (dict "label" "Automated tests maintained" "value" "__TESTS_MAINTAINED__")
+  (dict "label" "Regression time reduced" "value" "__REGRESSION_REDUCTION__")) -}}
+{{- $roles := $x.roles | default (slice
+  (dict "title" "Senior SDET" "company" "__COMPANY_1__" "period" "__ROLE_1_PERIOD__" "points" (slice "__ROLE_1_ACHIEVEMENT_1__" "__ROLE_1_ACHIEVEMENT_2__"))
+  (dict "title" "SDET" "company" "__COMPANY_2__" "period" "__ROLE_2_PERIOD__" "points" (slice "__ROLE_2_ACHIEVEMENT_1__" "__ROLE_2_ACHIEVEMENT_2__"))
+  (dict "title" "QA Engineer" "company" "__COMPANY_3__" "period" "__ROLE_3_PERIOD__" "points" (slice "__ROLE_3_ACHIEVEMENT_1__"))) -}}
+<section class="site-section" id="about" aria-labelledby="about-title">
+  <div class="site-container">
+    <header class="site-section__header">
+      <p class="site-eyebrow">About</p>
+      <h2 class="pf-v6-c-title pf-m-3xl" id="about-title">Experience &amp; impact</h2>
+    </header>
+    <div class="site-about__intro">
+      <div class="pf-v6-c-content">
+        {{- range $bio }}<p>{{ . }}</p>{{ end }}
+      </div>
+      <dl class="site-highlights" aria-label="Career impact">
+        {{- range $stats }}
+        <div class="site-reveal"><dt>{{ .label }}</dt><dd{{ if .numeric }} data-count-up{{ else }} class="site-highlight__text"{{ end }}>{{ .value }}</dd></div>
+        {{- end }}
+      </dl>
+      {{- with $p.resumeUrl }}
+      <a class="pf-v6-c-button pf-m-secondary" href="{{ . | relURL }}"><span class="pf-v6-c-button__text">Download résumé (PDF)</span></a>
+      {{- end }}
+    </div>
+    <section class="site-about__experience" aria-labelledby="experience-title">
+      <h3 class="pf-v6-c-title pf-m-lg site-timeline__heading" id="experience-title">Experience</h3>
+      <ol class="site-timeline" role="list">
+        {{- range $roles }}
+        <li class="site-timeline__item site-reveal">
+          <div class="site-timeline__role">
+            <h4 class="pf-v6-c-title pf-m-md">{{ .title }}</h4>
+            <p class="site-timeline__company">{{ .company }}</p>
+            <p class="site-meta">{{ .period }}</p>
+          </div>
+          <div class="site-timeline__evidence">
+            {{- with .summary }}<p class="site-timeline__summary">{{ . }}</p>{{ end }}
+            {{- with .points }}<ul class="pf-v6-c-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+          </div>
+        </li>
+        {{- end }}
+      </ol>
+    </section>
+    <div class="site-about__details">
+      {{- with $x.education }}
+      <section aria-labelledby="education-title">
+        <h3 class="pf-v6-c-title pf-m-lg" id="education-title">Education</h3>
+        <ul class="pf-v6-c-list pf-m-plain" role="list">
+          {{- range . }}
+          <li><strong>{{ .degree }}</strong><br>{{ .institution }}{{ with .location }}, {{ . }}{{ end }}<br><span class="site-meta">{{ .period }}</span></li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+      {{- with $x.awards }}
+      <section aria-labelledby="awards-title">
+        <h3 class="pf-v6-c-title pf-m-lg" id="awards-title">Awards &amp; recognition</h3>
+        <ul class="site-awards" role="list">
+          {{- range . }}
+          <li><strong>{{ .name }}</strong><span class="site-award__context">{{ .context }}</span><span class="site-meta">{{ .date }}</span></li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale | default "en" }}" class="no-js">
+<head>
+  {{- partial "head.html" . }}
+</head>
+<body>
+  <div class="pf-v6-c-skip-to-content">
+    <a class="pf-v6-c-button pf-m-primary" href="#main-content"><span class="pf-v6-c-button__text">Skip to content</span></a>
+  </div>
+  {{ partial "nav.html" . }}
+  <main id="main-content" tabindex="-1">
+    {{ block "main" . }}{{ end }}
+  </main>
+  {{ partial "footer.html" . }}
+  {{ partial "head/js.html" . }}
+</body>
+</html>

@@ -1,0 +1,17 @@
+{{- $p := hugo.Data.profile | default dict -}}
+{{- $email := $p.email | default site.Params.email | default "nsnganji@tuta.com" -}}
+<section class="site-section site-cta" id="contact" aria-labelledby="contact-title">
+  <div class="site-container site-container--narrow site-cta__inner">
+    <header class="site-section__header site-section__header--center">
+      <p class="site-eyebrow">Contact</p>
+      <h2 class="pf-v6-c-title pf-m-3xl" id="contact-title">Let's build quality in, not bolt it on.</h2>
+      <p class="site-lead">Interested in working together on test automation, CI/CD quality gates or a QA strategy? I'd love to hear from you.</p>
+    </header>
+    <div class="site-actions">
+      <a class="pf-v6-c-button pf-m-primary pf-m-display-lg" href="mailto:{{ $email }}">
+        <span class="pf-v6-c-button__icon pf-m-start">{{ partial "icon.html" "mail" }}</span><span class="pf-v6-c-button__text">Email me</span>
+      </a>
+    </div>
+    {{ partial "social-links.html" (dict "class" "site-contact__social" "label" "Contact and social profiles" "showText" true) }}
+  </div>
+</section>

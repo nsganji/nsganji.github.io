@@ -1,0 +1,341 @@
+/* ==========================================================================
+   theme.css: enterprise design system, light theme.
+   Bundled after PatternFly and BEFORE site.css (see SKILL.md -> Cascade order).
+
+   1. Fonts         Inter Variable (latin + latin-ext), self-hosted
+   2. Tokens        --ds-* abstraction layer: the ONLY tokens custom CSS may use
+   3. PF bridge     re-points PatternFly tokens at --ds-*; delete when leaving PatternFly
+   4. Base          global typography refinements
+   5. Components    skins for site-* classes (markup in references/component-specs.md)
+   6. Motion        reveal-on-scroll, reduced-motion guards
+   ========================================================================== */
+
+/* 1. Fonts ------------------------------------------------------------------
+   Files are mounted to static/css/assets/fonts/Inter/; paths are relative to
+   the bundle published at /css/. unicode-range means only used subsets load. */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./assets/fonts/Inter/inter-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./assets/fonts/Inter/inter-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter Variable";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./assets/fonts/Inter/inter-latin-wght-italic.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* 2. Tokens -----------------------------------------------------------------
+   OWNED tokens hold raw values (brand, type, code colours): PatternFly is pointed at them.
+   INHERITED tokens wrap a PatternFly token with a raw fallback: var(--pf-..., <value>).
+   Never make an owned token read a PF token that the bridge points back at it (cycle). */
+:root {
+  /* Brand ramp: "Assurance Blue" (owned) */
+  --ds-color-brand-50: #eef4ff;
+  --ds-color-brand-100: #dbe6fe;
+  --ds-color-brand-400: #4a7be5;
+  --ds-color-brand-600: #1a56db;
+  --ds-color-brand-700: #1745b0;
+  --ds-color-brand-800: #123785;
+  --ds-color-brand-900: #0b2559;
+
+  /* Accent ramp: "Verified Teal" (owned) */
+  --ds-color-accent-50: #e6f6f4;
+  --ds-color-accent-500: #0f8a7e;
+  --ds-color-accent-600: #0d7468;
+  --ds-color-accent-700: #0a5c53;
+
+  /* Semantic roles (owned, alias the ramps) */
+  --ds-color-primary: var(--ds-color-brand-600);
+  --ds-color-primary-hover: var(--ds-color-brand-700);
+  --ds-color-primary-subtle: var(--ds-color-brand-50);
+  --ds-color-primary-subtle-hover: var(--ds-color-brand-100);
+  --ds-color-accent: var(--ds-color-accent-600);
+  --ds-color-accent-strong: var(--ds-color-accent-700);
+  --ds-color-accent-subtle: var(--ds-color-accent-50);
+  --ds-color-accent-bar: var(--ds-color-accent-500);
+  --ds-color-link: var(--ds-color-brand-600);
+  --ds-color-link-hover: var(--ds-color-brand-700);
+  --ds-color-focus: var(--ds-color-brand-600);
+  --ds-color-border-hover: var(--ds-color-brand-400);
+  --ds-color-selection: var(--ds-color-brand-100);
+  --ds-color-grid-line: rgb(26 86 219 / 0.06);
+
+  /* Neutrals and surfaces (inherited) */
+  --ds-color-text: var(--pf-t--global--text--color--regular, #151515);
+  --ds-color-text-subtle: var(--pf-t--global--text--color--subtle, #4d4d4d);
+  --ds-color-text-on-primary: var(--pf-t--global--text--color--on-brand--default, #ffffff);
+  --ds-color-icon-subtle: var(--pf-t--global--icon--color--subtle, #707070);
+  --ds-color-surface: var(--pf-t--global--background--color--primary--default, #ffffff);
+  --ds-color-surface-alt: var(--pf-t--global--background--color--secondary--default, #f2f2f2);
+  --ds-color-border: var(--pf-t--global--border--color--default, #e0e0e0);
+  --ds-color-border-strong: var(--pf-t--color--gray--30, #c7c7c7);
+
+  /* Status (inherited; warning is a fill colour, never text on white) */
+  --ds-color-success: var(--pf-t--global--text--color--status--success--default, #3d7317);
+  --ds-color-success-subtle: var(--pf-t--global--color--nonstatus--green--default, #d1f1bb);
+  --ds-color-danger: var(--pf-t--global--text--color--status--danger--default, #b1380b);
+  --ds-color-warning: var(--pf-t--global--color--status--warning--default, #ffcc17);
+  --ds-color-info: var(--pf-t--global--text--color--status--info--default, #5e40be);
+
+  /* Code / syntax (owned; all >= 4.5:1 on --ds-code-bg) */
+  --ds-code-bg: #f6f7f9;
+  --ds-code-text: #151515;
+  --ds-code-comment: #5c5c5c;
+  --ds-code-keyword: var(--ds-color-brand-700);
+  --ds-code-string: #3d7317;
+  --ds-code-number: #5e40be;
+  --ds-code-function: var(--ds-color-accent-600);
+  --ds-code-attr: #8a4b00;
+  --ds-code-error: #a3330a;
+  --ds-code-line-highlight: var(--ds-color-brand-50);
+
+  /* Typography (owned) */
+  --ds-font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ds-font-heading: var(--ds-font-sans);
+  --ds-font-mono: "Red Hat Mono", "RedHatMono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ds-font-size-display: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
+  --ds-font-size-3xl: clamp(1.875rem, 1.5rem + 1.5vw, 2.5rem);
+  --ds-font-size-2xl: clamp(1.625rem, 1.4rem + 1vw, 2.125rem);
+  --ds-font-size-xl: 1.25rem;
+  --ds-font-size-lg: 1.125rem;
+  --ds-font-size-md: 1rem;
+  --ds-font-size-sm: 0.875rem;
+  --ds-font-size-xs: 0.75rem;
+  --ds-font-size-body: var(--ds-font-size-md);
+  --ds-font-size-lead: var(--ds-font-size-lg);
+  --ds-font-size-code: 0.875rem;
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+  --ds-line-height-body: 1.6;
+  --ds-line-height-heading: 1.2;
+  --ds-line-height-display: 1.1;
+  --ds-letter-spacing-display: -0.025em;
+  --ds-letter-spacing-heading: -0.015em;
+  --ds-letter-spacing-eyebrow: 0.08em;
+  --ds-measure: 68ch;
+
+  /* Spacing: 8px grid (inherited from PF spacers; xs is the 4px half-step) */
+  --ds-space-xs: var(--pf-t--global--spacer--xs, 0.25rem);
+  --ds-space-sm: var(--pf-t--global--spacer--sm, 0.5rem);
+  --ds-space-md: var(--pf-t--global--spacer--md, 1rem);
+  --ds-space-lg: var(--pf-t--global--spacer--lg, 1.5rem);
+  --ds-space-xl: var(--pf-t--global--spacer--xl, 2rem);
+  --ds-space-2xl: var(--pf-t--global--spacer--2xl, 3rem);
+  --ds-space-3xl: var(--pf-t--global--spacer--3xl, 4rem);
+  --ds-space-4xl: var(--pf-t--global--spacer--4xl, 5rem);
+
+  /* Layout (owned) */
+  --ds-space-section: clamp(4rem, 2.5rem + 5vw, 6rem);
+  --ds-space-section-compact: clamp(2.5rem, 2rem + 2.5vw, 3.5rem);
+  --ds-container-max: 1200px;
+  --ds-container-narrow: 820px;
+  --ds-gutter: clamp(1rem, 0.5rem + 2vw, 1.5rem);
+  --ds-masthead-height: 4.5rem;
+
+  /* Shape and elevation (inherited) */
+  --ds-radius-xs: var(--pf-t--global--border--radius--tiny, 4px);
+  --ds-radius-sm: var(--pf-t--global--border--radius--small, 6px);
+  --ds-radius-md: var(--pf-t--global--border--radius--medium, 16px);
+  --ds-radius-lg: var(--pf-t--global--border--radius--large, 24px);
+  --ds-radius-pill: var(--pf-t--global--border--radius--pill, 999px);
+  --ds-border-width: var(--pf-t--global--border--width--regular, 1px);
+  --ds-shadow-sm: var(--pf-t--global--box-shadow--sm, 0 1px 6px 0 rgb(41 41 41 / 0.15));
+  --ds-shadow-md: var(--pf-t--global--box-shadow--md, 0 4px 10px 0 rgb(41 41 41 / 0.15));
+  --ds-shadow-lg: var(--pf-t--global--box-shadow--lg, 0 10px 20px 0 rgb(41 41 41 / 0.15));
+  --ds-accent-bar-width: 3rem;
+  --ds-accent-bar-height: 4px;
+
+  /* Motion (inherited durations/easings; owned distances) */
+  --ds-duration-fast: var(--pf-t--global--motion--duration--sm, 100ms);
+  --ds-duration-base: var(--pf-t--global--motion--duration--md, 200ms);
+  --ds-duration-slow: var(--pf-t--global--motion--duration--lg, 300ms);
+  --ds-duration-reveal: var(--pf-t--global--motion--duration--2xl, 500ms);
+  --ds-ease-standard: var(--pf-t--global--motion--timing-function--default, cubic-bezier(.4, 0, .2, 1));
+  --ds-ease-enter: var(--pf-t--global--motion--timing-function--decelerate, cubic-bezier(0, 0, .2, 1));
+  --ds-ease-exit: var(--pf-t--global--motion--timing-function--accelerate, cubic-bezier(.4, 0, .7, .2));
+  --ds-lift: -2px;
+  --ds-reveal-distance: 12px;
+
+  /* Layering (inherited) */
+  --ds-z-masthead: var(--pf-t--global--z-index--md, 300);
+  --ds-z-overlay: var(--pf-t--global--z-index--lg, 400);
+}
+
+/* 3. PatternFly bridge -------------------------------------------------------
+   Only PF *ramp/base* tokens are re-pointed; PF's own default/hover/clicked
+   aliases then follow automatically. Remove this block when PF is removed. */
+:root {
+  --pf-t--global--color--brand--100: var(--ds-color-brand-400);
+  --pf-t--global--color--brand--200: var(--ds-color-brand-600);
+  --pf-t--global--color--brand--300: var(--ds-color-brand-700);
+  --pf-t--global--color--brand--400: var(--ds-color-brand-800);
+  --pf-t--global--color--brand--500: var(--ds-color-brand-900);
+  --pf-t--global--color--brand--subtle--100: var(--ds-color-brand-50);
+  --pf-t--global--color--brand--subtle--200: var(--ds-color-brand-100);
+  --pf-t--global--color--brand--subtle--300: var(--ds-color-brand-400);
+  --pf-t--global--color--brand--subtle--400: var(--ds-color-brand-600);
+  --pf-t--global--focus-ring--color--100: var(--ds-color-focus);
+  --pf-t--global--focus-ring--color--200: var(--ds-color-brand-700);
+  --pf-t--global--text--color--link--100: var(--ds-color-link);
+  --pf-t--global--text--color--link--200: var(--ds-color-link-hover);
+  --pf-t--global--text--color--link--250: var(--ds-color-brand-800);
+
+  --pf-t--global--font--family--body: var(--ds-font-sans);
+  --pf-t--global--font--family--heading: var(--ds-font-heading);
+  --pf-t--global--font--family--mono: var(--ds-font-mono);
+  --pf-t--global--font--size--body--default: var(--ds-font-size-body);
+  --pf-t--global--font--size--body--lg: var(--ds-font-size-lead);
+  --pf-t--global--font--size--body--sm: var(--ds-font-size-sm);
+  --pf-t--global--font--size--heading--2xl: var(--ds-font-size-display);
+  --pf-t--global--font--size--heading--xl: var(--ds-font-size-3xl);
+  --pf-t--global--font--size--heading--lg: var(--ds-font-size-2xl);
+  --pf-t--global--font--size--heading--md: var(--ds-font-size-xl);
+  --pf-t--global--font--size--heading--sm: var(--ds-font-size-lg);
+  --pf-t--global--font--size--heading--xs: var(--ds-font-size-lg);
+  --pf-t--global--font--weight--body--default: var(--ds-font-weight-regular);
+  --pf-t--global--font--weight--body--bold: var(--ds-font-weight-semibold);
+  --pf-t--global--font--weight--heading--default: var(--ds-font-weight-semibold);
+  --pf-t--global--font--weight--heading--bold: var(--ds-font-weight-bold);
+  --pf-t--global--font--line-height--body: var(--ds-line-height-body);
+  --pf-t--global--font--line-height--heading: var(--ds-line-height-heading);
+}
+
+/* 4. Base ------------------------------------------------------------------- */
+body { font-feature-settings: "cv11", "ss03"; text-rendering: optimizeLegibility; }
+::selection { background: var(--ds-color-selection); color: var(--ds-color-text); }
+.pf-v6-c-title { letter-spacing: var(--ds-letter-spacing-heading); }
+.pf-v6-c-title.pf-m-4xl { font-weight: var(--ds-font-weight-bold); letter-spacing: var(--ds-letter-spacing-display); line-height: var(--ds-line-height-display); }
+.pf-v6-c-content p, .site-lead { max-width: var(--ds-measure); }
+code, kbd, samp { font-family: var(--ds-font-mono); }
+
+/* 5. Components --------------------------------------------------------------
+   Selectors that refine a property site.css also sets are scoped one level deeper
+   (theme.css loads first, so equal specificity would lose). */
+
+/* Section header accent bar (CSS-only; applies to every .site-section__header) */
+.site-section__header::before {
+  content: ""; display: block;
+  inline-size: var(--ds-accent-bar-width); block-size: var(--ds-accent-bar-height);
+  margin-block-end: var(--ds-space-md);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-accent-bar);
+}
+.site-section__header--center { margin-inline: auto; text-align: center; }
+.site-section__header--center::before { margin-inline: auto; }
+.site-section__header--center .site-lead { margin-inline: auto; }
+
+/* Hero: soft brand glow + faint test-grid texture */
+.site-hero {
+  background:
+    radial-gradient(60rem 30rem at 85% -10%, var(--ds-color-primary-subtle), transparent 70%),
+    linear-gradient(var(--ds-color-grid-line) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, var(--ds-color-grid-line) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--ds-color-surface);
+  border-block-end: var(--ds-border-width) solid var(--ds-color-border);
+}
+.site-hero__highlight { color: var(--ds-color-primary); }
+
+/* Stat counters band */
+.site-stats {
+  display: grid; gap: var(--ds-space-lg);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0; text-align: center;
+}
+@media (min-width: 992px) { .site-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.site-stat { display: flex; flex-direction: column-reverse; gap: var(--ds-space-xs); padding-inline: var(--ds-space-md); }
+@media (min-width: 992px) { .site-stat + .site-stat { border-inline-start: var(--ds-border-width) solid var(--ds-color-border); } }
+.site-stat__value {
+  margin: 0; font-family: var(--ds-font-heading); font-size: var(--ds-font-size-3xl);
+  font-weight: var(--ds-font-weight-bold); line-height: var(--ds-line-height-display);
+  letter-spacing: var(--ds-letter-spacing-display); color: var(--ds-color-primary);
+  font-variant-numeric: tabular-nums;
+}
+.site-stat__label { font-size: var(--ds-font-size-sm); color: var(--ds-color-text-subtle); }
+.site-highlights dd { font-variant-numeric: tabular-nums; letter-spacing: var(--ds-letter-spacing-display); }
+
+/* Expertise cards: tinted icon tile */
+.site-skill .site-skill__icon {
+  display: inline-grid; place-items: center;
+  inline-size: 3.5rem; block-size: 3.5rem;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-primary-subtle);
+  font-size: 1.75rem; color: var(--ds-color-primary);
+}
+
+/* Tech stack badges (PF label, mono skin) */
+.site-tags .pf-v6-c-label {
+  --pf-v6-c-label--FontSize: var(--ds-font-size-xs);
+  --pf-v6-c-label--BorderRadius: var(--ds-radius-xs);
+  font-family: var(--ds-font-mono);
+  font-weight: var(--ds-font-weight-medium);
+}
+.site-tags .pf-v6-c-label.pf-m-outline { --pf-v6-c-label--m-outline--BorderColor: var(--ds-color-border-strong); }
+
+/* Recommendation summaries: person row */
+.site-quote__person { display: flex; align-items: center; gap: var(--ds-space-sm); }
+.site-quote__avatar {
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  inline-size: 2.5rem; block-size: 2.5rem; border-radius: 50%;
+  background: var(--ds-color-accent-subtle); color: var(--ds-color-accent-strong);
+  font-size: var(--ds-font-size-sm); font-weight: var(--ds-font-weight-semibold);
+}
+
+/* Contact CTA band */
+.site-cta {
+  background: linear-gradient(180deg, var(--ds-color-primary-subtle), var(--ds-color-surface));
+  border-block-start: var(--ds-border-width) solid var(--ds-color-primary-subtle-hover);
+}
+
+/* Code blocks (PF code-block + Hugo/Chroma classes) */
+.site-code {
+  --pf-v6-c-code-block--BackgroundColor: var(--ds-code-bg);
+  --pf-v6-c-code-block--BorderRadius: var(--ds-radius-sm);
+  --pf-v6-c-code-block__pre--FontSize: var(--ds-font-size-code);
+  --pf-v6-c-code-block--BorderColor: var(--ds-color-border);
+  --pf-v6-c-code-block--BorderWidth: var(--ds-border-width);
+  margin-block: var(--ds-space-lg);
+}
+.site-code .pf-v6-c-code-block__header { align-items: center; justify-content: space-between; }
+.site-code__lang {
+  font-family: var(--ds-font-mono); font-size: var(--ds-font-size-xs);
+  text-transform: uppercase; letter-spacing: var(--ds-letter-spacing-eyebrow); color: var(--ds-color-text-subtle);
+}
+.site-code .highlight, .site-code pre { margin: 0; background: transparent; }
+.site-code pre { overflow-x: auto; line-height: 1.55; color: var(--ds-code-text); tab-size: 2; }
+.site-code .chroma .hl { display: block; background: var(--ds-code-line-highlight); }
+.site-code .chroma .ln, .site-code .chroma .lnt { color: var(--ds-code-comment); margin-inline-end: var(--ds-space-md); user-select: none; }
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .cs, .chroma .ch, .chroma .cp, .chroma .cpf { color: var(--ds-code-comment); font-style: italic; }
+.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .ow, .chroma .nt { color: var(--ds-code-keyword); font-weight: var(--ds-font-weight-semibold); }
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .ss { color: var(--ds-code-string); }
+.chroma .m, .chroma .mi, .chroma .mf, .chroma .mh, .chroma .mo, .chroma .il, .chroma .mb { color: var(--ds-code-number); }
+.chroma .nf, .chroma .fm, .chroma .nc, .chroma .nd { color: var(--ds-code-function); }
+.chroma .na, .chroma .nb, .chroma .bp, .chroma .no, .chroma .nv, .chroma .vi { color: var(--ds-code-attr); }
+.chroma .err, .chroma .gd { color: var(--ds-code-error); }
+.chroma .gi { color: var(--ds-code-string); }
+.site-code__copy.is-copied { color: var(--ds-color-success); }
+
+/* 6. Motion --------------------------------------------------------------------
+   .site-reveal is hidden only when JS runs (.js on <html>) and motion is allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .site-reveal {
+    opacity: 0; transform: translateY(var(--ds-reveal-distance));
+    transition: opacity var(--ds-duration-reveal) var(--ds-ease-enter), transform var(--ds-duration-reveal) var(--ds-ease-enter);
+  }
+  .js .site-reveal.is-visible { opacity: 1; transform: none; }
+}
